@@ -1,3 +1,1 @@
-# phr.jyvsectec.fi
-
-Web site
+# phr.jycsectec.fi
