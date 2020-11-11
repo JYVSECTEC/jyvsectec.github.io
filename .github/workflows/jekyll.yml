@@ -8,12 +8,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@main
+    - name: Checkout
+      uses: actions/checkout@v2
+        
+    - name: Checkout PHR repo
+      uses: actions/checkout@v2
       with:
-        name: https://github.com/jyvsectec/phr-model
-        refs: refs/heads/main
+        repository: JYVSECTEC/phr-model
+        path: phr-model
+    
+    - name: Copy and prepare sites
+      run: |
+        cp phr-model/README.md build/
+        echo -e '---\nlayout: default\n---' | cat - build/README.md > /tmp/index.md && mv /tmp/index.md build/index.md
+        rm build/README.md
+        
     - name: Build the site in the jekyll/builder container
       run: |
         docker run \
         -v $(pwd)/build:/srv/jekyll -v $(pwd)/docs:/srv/jekyll/_site \
-        jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+        jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && JEKYLL_ENV=production jekyll build --future"
+
+    - name: push changes
+      run: |
+        git config --global user.name "workflow.bot"
+        git config --global user.email "workflow.bot"
+        git add docs/*
+        git commit -m "Publish site"
+        git push
