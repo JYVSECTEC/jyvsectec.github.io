@@ -28,7 +28,6 @@ jobs:
 
       - name: List files
         run: |
-          cd phr-model
           ls -all
 
       - name: Copy files
