@@ -17,6 +17,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       #- uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: Checkout PHR repo
         uses: actions/checkout@v2
         with:
@@ -27,6 +30,11 @@ jobs:
         run: |
           cd phr-model
           ls -all
+
+      - name: Copy files
+        run: |
+          cp phr-model/README.md jyvsectec.github.io/
+          ls -all phr-model/
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
