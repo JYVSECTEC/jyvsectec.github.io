@@ -22,6 +22,7 @@ jobs:
         cp phr-model/README.md build/
         echo -e '---\nlayout: default\n---' | cat - build/README.md > /tmp/index.md && mv /tmp/index.md build/index.md
         rm build/README.md
+        python3 build/phr_to_json.py phr-model/ --fill-html-template build/graph_template.html > build/phr.html
         
     - name: Build the site in the jekyll/builder container
       run: |
