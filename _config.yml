@@ -1,1 +1,6 @@
 theme: jekyll-theme-cayman
+title: JYVSECTEC PHR-model
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
