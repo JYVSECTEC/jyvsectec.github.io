@@ -5,6 +5,7 @@
  *    user zoom.
  */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+@import url("https://use.typekit.net/yom0dkv.css");
 html {
   font-family: sans-serif;
   /* 1 */
@@ -808,3 +809,46 @@ a {
 
 .site-footer-credits {
   color: #819198; }
+
+p {
+  line-height: 1.6em; }
+
+/*
+p > img {
+  display: block;
+  margin: 0 auto;
+}
+*/
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0; }
+
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-family: 'Sofia-Pro';
+  font-weight: 600;
+  color: #0D004C; }
+
+.project-name {
+  font-size: 64px; }
+
+.main-content h1 {
+  font-size: 46px; }
+
+.main-content h2 {
+  font-size: 36px; }
+
+.page-header {
+  text-align: center;
+  background-image: url("https://jyvsectec.fi/wp-content/uploads/2020/09/taustakuva-sormenjalki-2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat; }
+
+.site-footer-credits {
+  display: none; }
