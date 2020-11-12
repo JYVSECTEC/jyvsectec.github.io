@@ -68,7 +68,8 @@
   <body>
 
 <!-- load the d3.js library -->	
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script src="https://d3js.org/d3.v3.min.js"></script>
 	
 <script>
 
@@ -93,6 +94,8 @@ var diagonal = d3.svg.diagonal()
 var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.right + margin.left)
 	.attr("height", height + margin.top + margin.bottom)
+	.attr("display", block)
+	.attr("margin", auto)
   .append("g")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
