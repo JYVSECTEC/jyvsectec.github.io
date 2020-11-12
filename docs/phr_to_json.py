@@ -4,14 +4,20 @@ import glob
 import json
 import os
 import argparse
-
+import sys
+import re
 
 META_JSON_NAME = '.meta.json'
-
+MITRE_ATTACK_BY_TID = {}
+META_FILES = [META_JSON_NAME, '.gitignore', '.gitkeep']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("phr_root")
-parser.add_argument("--fill-html-template")
+parser.add_argument('-f', '--fill-html-template', action='store_true')
+parser.add_argument('-t', '--html-template-file', default='graph_template.html')
+parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master/')
+parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
+parser.add_argument('-o','--output', type=argparse.FileType('w'), default='-')
 
 def get_meta(folder_path):
     meta_path = os.path.join(folder_path, META_JSON_NAME)
@@ -45,21 +51,33 @@ def sort_children(children, meta):
         return sorted(children, key=lambda c: c['name'].lower())
 
 
-def import_folder(folder_path, options):
+def make_url(relative_path, options):
+    return '%s%s' % (options.url_base, relative_path)
+
+def import_folder(relative_path, options):
     children = []
 
-    meta = get_meta(folder_path)
-    name = get_name(folder_path)
-    folder_name = os.path.basename(folder_path)
+    meta = get_meta(relative_path)
+    name = get_name(relative_path)
+    folder_name = os.path.basename(relative_path)
+    full_path = os.path.join(options.phr_root, relative_path)
+
     if folder_name.startswith('_'):
         return None
 
+    folder_content_names = [os.path.basename(path) for path in glob.glob(os.path.join(full_path, '*'))]
+    folder_content_names = [n for n in folder_content_names if n not in META_FILES]
+    if not folder_content_names:
+        # Not even a README.md in this folder -> skip
+        print("Skip empty folder: %s" % relative_path, file=sys.stderr)
+        return None
 
-    for sub_folder in glob.glob(os.path.join(folder_path, '*')):
-        if not os.path.isdir(sub_folder):
+    for sub_content_name in folder_content_names:
+        sub_content_path = os.path.join(full_path, sub_content_name)
+        if not os.path.isdir(sub_content_path):
             continue
-
-        r = import_folder(sub_folder, options)
+        sub_folder_relative = os.path.join(relative_path, sub_content_name)
+        r = import_folder(sub_folder_relative, options)
         if r:
             children.append(r)
     
@@ -69,27 +87,57 @@ def import_folder(folder_path, options):
     if not children:
         folder_type = 'tool'
 
+    attack_object = None
+
+    if options.resolve_mitre_attack_names and re.search('^T\d\d\d\d(.\d+)?$', name):
+        attack_object = MITRE_ATTACK_BY_TID.get(name)
+        if attack_object:
+            name = '%s (%s)' % (attack_object['name'], name)
+
     return {
         'name': name,
         'folder_name': folder_name,
         'children': children,
-        'type': folder_type
+        'type': folder_type,
+        'attack_url': attack_object['url'] if attack_object else None,
+        'url': make_url(relative_path, options),
+        'relative_path': relative_path
     }
 
+def preload_mitre_attack_enterprise():
+    if not os.path.exists('enterprise-attack.json'):
+        raise Exception('Download enterprise-attack.json first.')
+    with open('enterprise-attack.json') as in_f:
+        enterprise_attack = json.load(in_f)
+        for obj in enterprise_attack['objects']:
+            if not obj['type'] == 'attack-pattern':
+                continue
+
+            refs = [r for r in obj['external_references'] if r['source_name'] == 'mitre-attack']
+            if not refs:
+                continue
+            ref = refs[0]
+            MITRE_ATTACK_BY_TID[ref['external_id']] = {
+                'name': obj.get('name', ''),
+                'description': obj.get('description', ''),
+                'url': ref.get('url', '')
+            }
 
 def run():
     options = parser.parse_args()
-    phr_root = options.phr_root
 
-    result = import_folder(phr_root, options)
+    if options.resolve_mitre_attack_names:
+        preload_mitre_attack_enterprise()
+
+    result = import_folder('', options)
 
     if options.fill_html_template:
-        with open(options.fill_html_template) as in_f:
+        with open(options.html_template_file) as in_f:
             template = in_f.read()
             template = template.replace('JSON_PLACEHOLDER', json.dumps(result))
-            print(template)
+            print(template, file=options.output)
     else:
-        print(json.dumps(result, indent=4))
+        print(json.dumps(result, indent=4), file=options.output)
 
 
 
