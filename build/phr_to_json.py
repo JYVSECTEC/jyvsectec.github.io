@@ -85,8 +85,7 @@ def import_folder(folder_path, options):
         'folder_name': folder_name,
         'children': children,
         'type': folder_type,
-        'url': attack_object['url'] if attack_object else None,
-        'description': attack_object['description'] if attack_object else None,
+        'url': attack_object['url'] if attack_object else None
     }
 
 def preload_mitre_attack_enterprise():
