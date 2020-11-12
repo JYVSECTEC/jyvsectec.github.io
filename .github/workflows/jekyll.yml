@@ -19,16 +19,17 @@ jobs:
           
     - name: Copy and prepare sites
       run: |
-        wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -O build/enterprise-attack.json
-        python3 build/phr_to_json.py phr-model/ \
+        cd build/
+        wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -O enterprise-attack.json
+        python3 phr_to_json.py ../phr-model/ \
             --fill-html-template \
-            --html-template-file build/graph_template.html \
+            --html-template-file graph_template.html \
             --resolve-mitre-attack-names \
-            --output build/phr.html
-        echo -e '---\nlayout: default\n---' | cat - build/phr.html > /tmp/phr.html && mv /tmp/phr.html build/phr.html
-        cp phr-model/README.md build/
-        echo -e '---\nlayout: default\n---' | cat - build/README.md > /tmp/index.md && mv /tmp/index.md build/index.md
-        rm build/README.md
+            --output phr.html
+        echo -e '---\nlayout: default\n---' | cat - phr.html > /tmp/phr.html && mv /tmp/phr.html phr.html
+        cp ../phr-model/README.md .
+        echo -e '---\nlayout: default\n---' | cat - README.md > /tmp/index.md && mv /tmp/index.md index.md
+        rm README.md
         
         
     - name: Build the site in the jekyll/builder container
