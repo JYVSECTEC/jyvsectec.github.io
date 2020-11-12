@@ -16,13 +16,10 @@ jobs:
       with:
         repository: JYVSECTEC/phr-model
         path: phr-model
-    
-    - name: Fetch Mitre ATT&CK matrice
-      run: |
-        wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -O build/enterprise-attack.json
-        
+          
     - name: Copy and prepare sites
       run: |
+        wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -O build/enterprise-attack.json
         python3 build/phr_to_json.py phr-model/ \
             --fill-html-template \
             --html-template-file build/graph_template.html \
