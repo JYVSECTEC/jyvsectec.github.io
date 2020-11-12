@@ -141,9 +141,11 @@ function update(source) {
 	  .style("fill", function(d) { return d._children ? "#3E3072" : "#fff"; });
 
   nodeEnter.append("text")
-	  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+	//   .attr("x", function(d) { return d.children || d._children ? 13 : 13; })
+	  .attr("x", "13")
 	  .attr("dy", ".35em")
-	  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+	//   .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+	  .attr("text-anchor", "start")
 	  .text(function(d) { return d.name; })
 	  .style("fill-opacity", 1e-6);
 
