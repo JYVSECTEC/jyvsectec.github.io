@@ -9,7 +9,7 @@ import re
 
 META_JSON_NAME = '.meta.json'
 MITRE_ATTACK_BY_TID = {}
-
+META_FILES = [META_JSON_NAME, '.gitignore', '.gitkeep']
 
 parser = argparse.ArgumentParser()
 parser.add_argument("phr_root")
@@ -65,11 +65,18 @@ def import_folder(relative_path, options):
     if folder_name.startswith('_'):
         return None
 
-    for sub_folder_path in glob.glob(os.path.join(full_path, '*')):
-        if not os.path.isdir(sub_folder_path):
+    folder_content_names = [os.path.basename(path) for path in glob.glob(os.path.join(full_path, '*'))]
+    folder_content_names = [n for n in folder_content_names if n not in META_FILES]
+    if not folder_content_names:
+        # Not even a README.md in this folder -> skip
+        print("Skip empty folder: %s" % relative_path, file=sys.stderr)
+        return None
+
+    for sub_content_name in folder_content_names:
+        sub_content_path = os.path.join(full_path, sub_content_name)
+        if not os.path.isdir(sub_content_path):
             continue
-        sub_folder_name = os.path.basename(sub_folder_path)
-        sub_folder_relative = os.path.join(relative_path, sub_folder_name)
+        sub_folder_relative = os.path.join(relative_path, sub_content_name)
         r = import_folder(sub_folder_relative, options)
         if r:
             children.append(r)
@@ -81,6 +88,7 @@ def import_folder(relative_path, options):
         folder_type = 'tool'
 
     attack_object = None
+
     if options.resolve_mitre_attack_names and re.search('^T\d\d\d\d(.\d+)?$', name):
         attack_object = MITRE_ATTACK_BY_TID.get(name)
         if attack_object:
