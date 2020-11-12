@@ -94,8 +94,7 @@ var diagonal = d3.svg.diagonal()
 var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.right + margin.left)
 	.attr("height", height + margin.top + margin.bottom)
-	.attr("display", block)
-	.attr("margin", auto)
+	.attr("style", "display: block; margin: auto")
   .append("g")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
