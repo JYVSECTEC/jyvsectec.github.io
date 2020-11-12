@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>PHR-model</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="PHR-model" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="PHR-model" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="PHR-model" />
+<script type="application/ld+json">
+{"url":"/phr.html","@type":"WebPage","headline":"PHR-model","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <a href="https://github.com/JYVSECTEC/phr-model/"><img loading="lazy" style="float:right" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    <section class="page-header">
+      <h1 class="project-name">PHR-model</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="phr.html" style="color:white" class="btn">Interactive PHR</a>
+      
+      
+    </section>
+    <section class="main-content">
+      <!DOCTYPE html>
+
+<!-- Adapted from https://bl.ocks.org/d3noob/8375092 -->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Interactive PHR</title>
+
+    <style>
+	@import url("https://use.typekit.net/yom0dkv.css");
+
+	.node {
+		cursor: pointer;
+	}
+
+	.node circle {
+	  fill: #fff;
+	  stroke: #0D004C;
+	  stroke-width: 3px;
+	}
+
+	.node text {
+	  font: 16px 'Sofia-Pro';
+	}
+
+	.link {
+	  fill: none;
+	  stroke: #ccc;
+	  stroke-width: 2px;
+	}
+	
+    </style>
+
+  </head>
+
+  <body>
+
+<!-- load the d3.js library -->	
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script src="https://d3js.org/d3.v3.min.js"></script>
+	
+<script>
+
+var treeData = [{"name": "", "folder_name": "", "children": [{"name": "Preparation", "folder_name": "Preparation", "children": [], "type": "tool"}, {"name": "Hypotheses", "folder_name": "Hypotheses", "children": [], "type": "tool"}, {"name": "Data Collection", "folder_name": "Data Collection", "children": [{"name": "tactics", "folder_name": "tactics", "children": [{"name": "Command and Control", "folder_name": "Command and Control", "children": [{"name": "T1071", "folder_name": "T1071", "children": [{"name": "T1071.001", "folder_name": "T1071.001", "children": [], "type": "tool"}, {"name": "T1071.002", "folder_name": "T1071.002", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}, {"name": "Credential Access", "folder_name": "Credential Access", "children": [{"name": "T1003", "folder_name": "T1003", "children": [{"name": "T1003.001", "folder_name": "T1003.001", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1056", "folder_name": "T1056", "children": [{"name": "T1056.001", "folder_name": "T1056.001", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1110", "folder_name": "T1110", "children": [{"name": "T1110.003", "folder_name": "T1110.003", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}, {"name": "Defence Evasion", "folder_name": "Defence Evasion", "children": [{"name": "T1070", "folder_name": "T1070", "children": [{"name": "T1070.004", "folder_name": "T1070.004", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1140", "folder_name": "T1140", "children": [], "type": "tool"}], "type": "topic"}, {"name": "Discovery", "folder_name": "Discovery", "children": [{"name": "T1016", "folder_name": "T1016", "children": [], "type": "tool"}, {"name": "T1083", "folder_name": "T1083", "children": [], "type": "tool"}, {"name": "T1087", "folder_name": "T1087", "children": [{"name": "T1087.001", "folder_name": "T1087.001", "children": [], "type": "tool"}, {"name": "T1087.002", "folder_name": "T1087.002", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}, {"name": "Execution", "folder_name": "Execution", "children": [{"name": "T1059", "folder_name": "T1059", "children": [{"name": "T1059.001", "folder_name": "T1059.001", "children": [], "type": "tool"}, {"name": "T1059.003", "folder_name": "T1059.003", "children": [], "type": "tool"}, {"name": "T1059.005", "folder_name": "T1059.005", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}, {"name": "Lateral Movement", "folder_name": "Lateral Movement", "children": [{"name": "T1021", "folder_name": "T1021", "children": [{"name": "T1021.001", "folder_name": "T1021.001", "children": [], "type": "tool"}, {"name": "T1021.002", "folder_name": "T1021.002", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1570", "folder_name": "T1570", "children": [], "type": "tool"}], "type": "topic"}, {"name": "Persistence", "folder_name": "Persistence", "children": [{"name": "T1053", "folder_name": "T1053", "children": [{"name": "T1053.002", "folder_name": "T1053.002", "children": [], "type": "tool"}, {"name": "T1053.005", "folder_name": "T1053.005", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1078", "folder_name": "T1078", "children": [{"name": "T1078.001", "folder_name": "T1078.001", "children": [], "type": "tool"}, {"name": "T1078.002", "folder_name": "T1078.002", "children": [], "type": "tool"}, {"name": "T1078.003", "folder_name": "T1078.003", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1547", "folder_name": "T1547", "children": [{"name": "T1547.001", "folder_name": "T1547.001", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}, {"name": "Privilege Escalation", "folder_name": "Privilege Escalation", "children": [{"name": "T1053", "folder_name": "T1053", "children": [{"name": "T1053.002", "folder_name": "T1053.002", "children": [], "type": "tool"}, {"name": "T1053.005", "folder_name": "T1053.005", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1078", "folder_name": "T1078", "children": [{"name": "T1078.001", "folder_name": "T1078.001", "children": [], "type": "tool"}, {"name": "T1078.002", "folder_name": "T1078.002", "children": [], "type": "tool"}, {"name": "T1078.003", "folder_name": "T1078.003", "children": [], "type": "tool"}], "type": "topic"}, {"name": "T1543", "folder_name": "T1543", "children": [{"name": "T1543.003", "folder_name": "T1543.003", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}], "type": "topic"}], "type": "topic"}, {"name": "Enrichment", "folder_name": "Enrichment", "children": [], "type": "tool"}, {"name": "Playbooks", "folder_name": "Playbooks", "children": [], "type": "tool"}, {"name": "Triage-Respond", "folder_name": "Triage-Respond", "children": [{"name": "DFIR", "folder_name": "DFIR", "children": [{"name": "Remote Live Forensics", "folder_name": "Remote Live Forensics", "children": [], "type": "tool"}], "type": "topic"}], "type": "topic"}, {"name": "Eradicate-Recover", "folder_name": "Eradicate-Recover", "children": [], "type": "tool"}, {"name": "Lessons Learned", "folder_name": "Lessons Learned", "children": [], "type": "tool"}, {"name": "Improvements", "folder_name": "Improvements", "children": [], "type": "tool"}], "type": "topic"}];
+
+
+// ************** Generate the tree diagram	 *****************
+var margin = {top: 20, right: 120, bottom: 20, left: 120},
+	width = 1560 - margin.right - margin.left,
+	height = 1000 - margin.top - margin.bottom;
+	
+var i = 0,
+	duration = 750,
+	root;
+
+var tree = d3.layout.tree()
+	.size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+	.projection(function(d) { return [d.y, d.x]; });
+
+var svg = d3.select("body").append("svg")
+	.attr("width", width + margin.right + margin.left)
+	.attr("height", height + margin.top + margin.bottom)
+	.attr("style", "display: block; margin: auto")
+  .append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+root = treeData[0];
+root.x0 = height / 2;
+root.y0 = 0;
+
+function collapse(d) {
+    if (d.children) {
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
+}
+root.children.forEach(collapse);
+update(root);
+
+d3.select(self.frameElement).style("height", "500px");
+
+function update(source) {
+
+  // Compute the new tree layout.
+  var nodes = tree.nodes(root).reverse(),
+	  links = tree.links(nodes);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) { d.y = d.depth * 180; });
+
+  // Update the nodes…
+  var node = svg.selectAll("g.node")
+	  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append("g")
+	  .attr("class", "node")
+	  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+	  .on("click", click);
+
+  nodeEnter.append("circle")
+	  .attr("r", 1e-6)
+	  .style("fill", function(d) { return d._children ? "#3E3072" : "#fff"; });
+
+  nodeEnter.append("text")
+	  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+	  .attr("dy", ".35em")
+	  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+	  .text(function(d) { return d.name; })
+	  .style("fill-opacity", 1e-6);
+
+  // Transition nodes to their new position.
+  var nodeUpdate = node.transition()
+	  .duration(duration)
+	  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+  nodeUpdate.select("circle")
+	  .attr("r", 10)
+	  .style("fill", function(d) { return d._children ? "#3E3072" : "#fff"; });
+
+  nodeUpdate.select("text")
+	  .style("fill-opacity", 1);
+
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+	  .duration(duration)
+	  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+	  .remove();
+
+  nodeExit.select("circle")
+	  .attr("r", 1e-6);
+
+  nodeExit.select("text")
+	  .style("fill-opacity", 1e-6);
+
+  // Update the links…
+  var link = svg.selectAll("path.link")
+	  .data(links, function(d) { return d.target.id; });
+
+  // Enter any new links at the parent's previous position.
+  link.enter().insert("path", "g")
+	  .attr("class", "link")
+	  .attr("d", function(d) {
+		var o = {x: source.x0, y: source.y0};
+		return diagonal({source: o, target: o});
+	  });
+
+  // Transition links to their new position.
+  link.transition()
+	  .duration(duration)
+	  .attr("d", diagonal);
+
+  // Transition exiting nodes to the parent's new position.
+  link.exit().transition()
+	  .duration(duration)
+	  .attr("d", function(d) {
+		var o = {x: source.x, y: source.y};
+		return diagonal({source: o, target: o});
+	  })
+	  .remove();
+
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
+	d.x0 = d.x;
+	d.y0 = d.y;
+  });
+}
+
+// Toggle children on click.
+function click(d) {
+  if (d.children) {
+	d._children = d.children;
+	d.children = null;
+  } else {
+	d.children = d._children;
+	d._children = null;
+  }
+  update(d);
+}
+
+</script>
+	
+  </body>
+</html>
+
+
+      <!--
+      <footer class="site-footer">
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+      -->
+    </section>
+
+    
+  </body>
+</html>

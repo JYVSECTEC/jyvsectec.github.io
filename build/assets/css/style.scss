@@ -1,0 +1,49 @@
+---
+---
+/*
+* Override https://github.com/pages-themes/cayman/blob/master/assets/css/style.scss
+*/ 
+
+$font-family: 'Sofia-Pro';
+$font-color: #0D004C;
+$font-weight: 600;
+$font-size-base: 36px;
+$header-background-image: url("https://jyvsectec.fi/wp-content/uploads/2020/09/taustakuva-sormenjalki-2.jpg");
+
+@import "jekyll-theme-cayman";
+@import url("https://use.typekit.net/yom0dkv.css");
+
+p {
+  line-height: 1.6em;
+}
+
+.project-name {
+  font-size: $font-size-base + 24px;
+}
+
+.main-content h1 {
+  font-size: $font-size-base + 10px;
+}
+
+.main-content h2 {
+  font-size: $font-size-base;
+}
+
+.main-content {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: $font-family;
+    font-weight: $font-weight;
+    color: $font-color; 
+  }
+}
+
+.page-header {
+  background-image: $header-background-image;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
