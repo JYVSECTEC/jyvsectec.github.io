@@ -13,8 +13,9 @@ MITRE_ATTACK_BY_TID = {}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("phr_root")
-parser.add_argument('-f', '--fill-html-template')
+parser.add_argument('-f', '--fill-html-template', action='store_true')
 parser.add_argument('-t', '--html-template-file', default='graph_template.html')
+parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master/')
 parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
 parser.add_argument('-o','--output', type=argparse.FileType('w'), default='-')
 
@@ -50,21 +51,26 @@ def sort_children(children, meta):
         return sorted(children, key=lambda c: c['name'].lower())
 
 
-def import_folder(folder_path, options):
+def make_url(relative_path, options):
+    return '%s%s' % (options.url_base, relative_path)
+
+def import_folder(relative_path, options):
     children = []
 
-    meta = get_meta(folder_path)
-    name = get_name(folder_path)
-    folder_name = os.path.basename(folder_path)
+    meta = get_meta(relative_path)
+    name = get_name(relative_path)
+    folder_name = os.path.basename(relative_path)
+    full_path = os.path.join(options.phr_root, relative_path)
+
     if folder_name.startswith('_'):
         return None
 
-
-    for sub_folder in glob.glob(os.path.join(folder_path, '*')):
-        if not os.path.isdir(sub_folder):
+    for sub_folder_path in glob.glob(os.path.join(full_path, '*')):
+        if not os.path.isdir(sub_folder_path):
             continue
-
-        r = import_folder(sub_folder, options)
+        sub_folder_name = os.path.basename(sub_folder_path)
+        sub_folder_relative = os.path.join(relative_path, sub_folder_name)
+        r = import_folder(sub_folder_relative, options)
         if r:
             children.append(r)
     
@@ -85,7 +91,9 @@ def import_folder(folder_path, options):
         'folder_name': folder_name,
         'children': children,
         'type': folder_type,
-        'url': attack_object['url'] if attack_object else None
+        'attack_url': attack_object['url'] if attack_object else None,
+        'url': make_url(relative_path, options),
+        'relative_path': relative_path
     }
 
 def preload_mitre_attack_enterprise():
@@ -109,12 +117,11 @@ def preload_mitre_attack_enterprise():
 
 def run():
     options = parser.parse_args()
-    phr_root = options.phr_root
 
     if options.resolve_mitre_attack_names:
         preload_mitre_attack_enterprise()
 
-    result = import_folder(phr_root, options)
+    result = import_folder('', options)
 
     if options.fill_html_template:
         with open(options.html_template_file) as in_f:
@@ -122,8 +129,7 @@ def run():
             template = template.replace('JSON_PLACEHOLDER', json.dumps(result))
             print(template, file=options.output)
     else:
-        pass
-    print(json.dumps(result, indent=4), file=options.output)
+        print(json.dumps(result, indent=4), file=options.output)
 
 
 
