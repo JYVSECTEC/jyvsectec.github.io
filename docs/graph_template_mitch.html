@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>PHR Model</title>
+		<script src="./dist/js/d3-mitch-tree.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="./dist/css/d3-mitch-tree.min.css">
+		<link rel="stylesheet" type="text/css" href="./dist/css/d3-mitch-tree-theme-default.min.css">
+	</head>
+	<body>
+		<section id="visualisation"></section>
+		<script>
+			var data = JSON_PLACEHOLDER;
+			
+			var treePlugin = new d3.mitchTree.circleTree()
+				.setData(data)
+				.setElement(document.getElementById("visualisation"))
+				.setIdAccessor(function(data) {
+					return data.id;
+				})
+				.setChildrenAccessor(function(data) {
+					return data.children;
+				})
+				.setDisplayTextAccessor(function(data) {
+					return data.name;
+				})
+				.initialize();
+				
+		</script>
+	</body>
+</html>
