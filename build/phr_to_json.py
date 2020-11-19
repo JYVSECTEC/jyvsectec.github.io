@@ -10,6 +10,7 @@ import re
 META_JSON_NAME = '.meta.json'
 MITRE_ATTACK_BY_TID = {}
 META_FILES = [META_JSON_NAME, '.gitignore', '.gitkeep']
+ID_COUNT = 0
 
 parser = argparse.ArgumentParser()
 parser.add_argument("phr_root")
@@ -54,11 +55,17 @@ def sort_children(children, meta):
 def make_url(relative_path, options):
     return '%s%s' % (options.url_base, relative_path)
 
+def get_id():
+    global ID_COUNT
+    ID_COUNT += 1
+    return ID_COUNT
+
 def import_folder(relative_path, options):
     children = []
 
     meta = get_meta(relative_path)
     name = get_name(relative_path)
+    identifier = get_id()
     folder_name = os.path.basename(relative_path)
     full_path = os.path.join(options.phr_root, relative_path)
 
@@ -95,6 +102,7 @@ def import_folder(relative_path, options):
             name = '%s (%s)' % (attack_object['name'], name)
 
     return {
+        'id': identifier,
         'name': name,
         'folder_name': folder_name,
         'children': children,
