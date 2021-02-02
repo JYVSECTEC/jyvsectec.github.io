@@ -17,6 +17,7 @@ parser.add_argument("phr_root")
 parser.add_argument('-f', '--fill-html-template', action='store_true')
 parser.add_argument('-t', '--html-template-file', default='graph_template.html')
 parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master/')
+parser.add_argument('-m', '--markdown-url-base', default='https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/')
 parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
 parser.add_argument('-o','--output', type=argparse.FileType('w'), default='-')
 
@@ -54,6 +55,9 @@ def sort_children(children, meta):
 
 def make_url(relative_path, options):
     return '%s%s' % (options.url_base, relative_path)
+
+def make_markdown_url(relative_path, options):
+    return '%s%s/README.md' % (options.markdown_url_base, relative_path)
 
 def get_id():
     global ID_COUNT
@@ -109,6 +113,7 @@ def import_folder(relative_path, options):
         'type': folder_type,
         'attack_url': attack_object['url'] if attack_object else None,
         'url': make_url(relative_path, options),
+        'markdown_url': make_markdown_url(relative_path, options),
         'relative_path': relative_path
     }
 
