@@ -17,6 +17,7 @@ parser.add_argument("phr_root")
 parser.add_argument('-f', '--fill-html-template', action='store_true')
 parser.add_argument('-t', '--html-template-file', default='graph_template.html')
 parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master/')
+parser.add_argument('-m', '--md-base', default='https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/')
 parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
 parser.add_argument('-o','--output', type=argparse.FileType('w'), default='-')
 
@@ -54,6 +55,10 @@ def sort_children(children, meta):
 
 def make_url(relative_path, options):
     return '%s%s' % (options.url_base, relative_path)
+
+def make_md_url(relative_path, options):
+    # return URI for a raw markdown file named as README.md
+    return f"{ options.md_base }{ relative_path }\\README.md"
 
 def get_id():
     global ID_COUNT
@@ -103,12 +108,13 @@ def import_folder(relative_path, options):
 
     return {
         'id': identifier,
-        'name': name,
+        'name': name if identifier != 1 else 'PHR model',
         'folder_name': folder_name,
         'children': children,
         'type': folder_type,
         'attack_url': attack_object['url'] if attack_object else None,
         'url': make_url(relative_path, options),
+        'markdown_url': make_md_url(relative_path, options),
         'relative_path': relative_path
     }
 
@@ -138,12 +144,14 @@ def run():
         preload_mitre_attack_enterprise()
 
     result = import_folder('', options)
-
+    # print(json.dumps(result))
     if options.fill_html_template:
         with open(options.html_template_file) as in_f:
             template = in_f.read()
+            # print(template)
             template = template.replace('JSON_PLACEHOLDER', json.dumps(result))
             print(template, file=options.output)
+            print(template)
     else:
         print(json.dumps(result, indent=4), file=options.output)
 
