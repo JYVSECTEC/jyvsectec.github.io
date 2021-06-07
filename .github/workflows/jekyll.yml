@@ -23,7 +23,7 @@ jobs:
         wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -O enterprise-attack.json
         python3 phr_to_json.py ../phr-model/ \
             --fill-html-template \
-            --html-template-file graph_template_mitch.html \
+            --html-template-file vue_template.html \
             --resolve-mitre-attack-names \
             --output phr.html
         echo -e '---\nlayout: default\n---' | cat - phr.html > /tmp/phr.html && mv /tmp/phr.html phr.html
