@@ -26,9 +26,9 @@ jobs:
             --html-template-file vue_template.html \
             --resolve-mitre-attack-names \
             --output phr.html
-        echo -e '---\nlayout: default\n---' | cat - phr.html > /tmp/phr.html && mv /tmp/phr.html phr.html
+        #echo -e '---\nlayout: default\n---' | cat - phr.html > /tmp/phr.html && mv /tmp/phr.html phr.html
         cp ../phr-model/README.md .
-        echo -e '---\nlayout: default\n---' | cat - README.md > /tmp/index.md && mv /tmp/index.md index.md
+        #echo -e '---\nlayout: default\n---' | cat - README.md > /tmp/index.md && mv /tmp/index.md index.md
         rm README.md enterprise-attack.json
         
         
