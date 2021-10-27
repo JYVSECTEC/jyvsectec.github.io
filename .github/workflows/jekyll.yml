@@ -16,6 +16,12 @@ jobs:
       with:
         repository: JYVSECTEC/phr-model
         path: phr-model
+
+    - name: Checkout PHR-model-links repo
+      uses: actions/checkout@v2
+      with:
+        repository: JYVSECTEC/phr-model-links
+        path: phr-model-links
           
     - name: Copy and prepare sites
       run: |
@@ -26,6 +32,10 @@ jobs:
             --html-template-file vue_template.html \
             --resolve-mitre-attack-names \
             --output phr.html
+        python3 link_to_json.py phr.html \
+            -s ../phr-model-links \
+            -m https://raw.githubusercontent.com/JYVSECTEC/PHR-model-links/main \
+            -l
         #echo -e '---\nlayout: default\n---' | cat - phr.html > /tmp/phr.html && mv /tmp/phr.html phr.html
         cp ../phr-model/README.md .
         #echo -e '---\nlayout: default\n---' | cat - README.md > /tmp/index.md && mv /tmp/index.md index.md

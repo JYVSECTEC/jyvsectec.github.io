@@ -1,133 +1,277 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <link href="./assets/css/app-style.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link href="https://fonts.cdnfonts.com/css/sofia-pro" rel="stylesheet">          
 </head>
+
 <body>
   <div id="app">
     <v-app>
-      <v-main>
+      <v-main class="app-style">
         <v-container>
-          <v-card>
-            <v-toolbar
-              color="blue darken-4"
-              dark
-              flat
-            >
+          <v-card style="background-color: transparent;" elevation="0">
+            <v-toolbar style="background-color: transparent;" dark flat>
               <!-- <v-icon>mdi-silverware</v-icon> -->
               <v-toolbar-title>Interactive PHR Model</v-toolbar-title>
             </v-toolbar>
-        
             <v-row>
-              <v-col cols="4">
-                <v-card-text>
-                  <v-treeview
-                    v-if="phases.length > 0"
-                    v-model="selectedItems"
-                    :items="phases"
-                    open-all
-                    selected-color="indigo"
-                    open-on-click
-                    selectable
-                    return-object
-                    expand-icon="mdi-chevron-down"
-                    on-icon="mdi-bookmark"
-                    off-icon="mdi-bookmark-outline"
-                    indeterminate-icon="mdi-bookmark-minus"
+              <v-col cols="3">
+                <v-autocomplete
+                  v-if="phrViewActive"
+                  class="rounded-0"
+                  v-model="search" 
+                  :items="getTopics" 
+                  placeholder="Search" 
+                  :disabled="!phrViewActive"
+                  return-object 
+                  clearable 
+                  solo 
+                  @change="addTopic">
+              </v-autocomplete>
+              <v-autocomplete
+                  v-if="!phrViewActive"
+                  class="rounded-0"
+                  background-color="grey"
+                  v-model="search" 
+                  :items="getTopics" 
+                  placeholder="links cannot be searched" 
+                  :disabled="true"
+                  solo 
+                  @change="addTopic">
+              </v-autocomplete>
+              </v-col>
+            </v-row>
+
+            <v-row style="min-height: 75vh;">
+              <v-col cols="3">
+                <v-card-title style="color:#ffffff;">
+                  <v-btn 
+                    id="PHR" 
+                    @click="toggleButtons()" 
+                    :outlined="!phrViewActive" 
+                    color="white" 
+                    tile
                   >
-                  </v-treeview>
-                </v-card-text>
+                    PHR-model
+                  </v-btn>
+                  <v-btn 
+                    id="LINKS" 
+                    @click="toggleButtons()" 
+                    :outlined="phrViewActive" 
+                    color="white" 
+                    tile
+                  >
+                    Links
+                  </v-btn>
+                </v-card-title>
+                <div v-if="phrViewActive">
+                  <v-card-text>
+                    <v-treeview 
+                      key="PHR-model" 
+                      v-if="phases.length > 0" 
+                      v-model="selectedItems"
+                      :items="phases[0].children" 
+                      selected-color="#56a996" 
+                      open-on-click 
+                      selectable 
+                      return-object 
+                      dark
+                      expand-icon="mdi-chevron-down" on-icon="mdi-arrow-right-drop-circle"
+                      off-icon="mdi-arrow-right-drop-circle-outline" transition hoverable
+                      v-intersect="handleIntersectButtons"
+                    >
+                    </v-treeview>
+                  </v-card-text>
+                </div>
+
+                <div v-if="!phrViewActive">
+                  <v-card-text>
+                    <v-treeview 
+                      key="PHR-links" 
+                      v-if="!phrViewActive" 
+                      v-model="selectedLinks" 
+                      :items="filterPhrModelLinks"
+                      selected-color="#56a996" 
+                      open-on-click 
+                      selectable 
+                      return-object 
+                      dark
+                      expand-icon="mdi-chevron-down" 
+                      on-icon="mdi-arrow-right-drop-circle"
+                      off-icon="mdi-arrow-right-drop-circle-outline"
+                      transition 
+                      hoverable
+                      v-intersect="handleIntersectButtons"
+                    >
+                    </v-treeview>
+                  </v-card-text>
+                </div>
+                <div style="position: fixed;bottom: 10px; left: 35px;">
+                  <v-btn 
+                    @click="handleResetButton" 
+                    text 
+                    dark
+                  >
+                    Reset
+                  </v-btn>
+                  <v-btn 
+                    @click.stop="moveToPageTop" 
+                    v-if="showUpButton" 
+                    text 
+                    dark
+                  >
+                    UP
+                  </v-btn>
+                  <v-img
+                  style="position: fixed;bottom: 10px; right: 10px;"
+                  max-height="150"
+                  max-width="250"
+                  src="/assets/img/JyvsectecWhiteTextLogo.png"
+                  ></v-img>
+                </div>
               </v-col>
               <!-- <v-divider vertical></v-divider> -->
-              <v-col>
-                <v-card-text>
-                  <div
-                    v-if="selectedItems.length === 0"
-                    key="title"
-                    class="title font-weight-light grey--text pa-4 text-center"
-                  >
-                    Select the content you want to display
-                  </div>
+              <v-col cols="7">
+                <div v-if="phrViewActive">
+                  <v-card-text>
+                    <div v-if="selectedItems.length === 0" key="title"
+                      class="title font-weight-light grey--text pa-4 text-center">
+                      Select the content you want to display
+                    </div>
 
-                  <div v-if="selectedItems.length > 0" >
-                    <v-scroll-x-transition
-                      group
-                      hide-on-leave
+                    <div v-if="selectedItems.length > 0">
+                      <v-scroll-x-transition group hide-on-leave>
+                        <v-chip 
+                          v-for="(selection, i) in selectedItems" 
+                          :key="i" 
+                          color="#26345e" 
+                          dark 
+                          small 
+                          class="ma-1"
+                          @click="jumpToSelectedItem(`card-${i}`)"
+                        >
+                          <v-btn 
+                            icon 
+                            color="white" 
+                            x-small 
+                            class="mr-2" 
+                            @click.stop="removeSelectedItem(i)"
+                          >
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                          {{ selection.name }}
+                        </v-chip>
+                      </v-scroll-x-transition>
+                    </div>
+
+                    <v-card 
+                      v-for="(selection, i) in selectedItems" 
+                      :key="i" 
+                      :id="`card-${i}`" 
+                      class="my-6"
+                      style="background-color: rgba(50, 45, 106, 0.97);"
                     >
-                      <v-chip
-                        v-for="(selection, i) in selectedItems"
-                        :key="i"
-                        color="grey"
-                        dark
-                        small
-                        class="ma-1"
-                      >
-                        <v-btn
-                          icon
-                          color="white"
-                          x-small
-                          class="mr-2"
+                      <v-card-title style="border-top: 15px solid #56a996; color: #ffffff">
+                        {{selection.relative_path}}
+                        <v-btn 
+                          icon 
+                          color="primary" 
+                          :href="selection.url" 
+                          class="ml-2"
+                        >
+                          <v-icon>mdi-github</v-icon>
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn style="color:rgba(226,6,110,1);"
+                          icon  
                           @click="removeSelectedItem(i)"
                         >
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
-                        {{ selection.name }}
-                      </v-chip>
-                    </v-scroll-x-transition>
+                      </v-card-title>
+                      <v-card-text>
+                        <view-mk 
+                          :key="i" 
+                          :url="selection.markdown_url" 
+                          style="color: #ffffff"
+                          class="phr-links"
+                        >
+                        </view-mk>
+                      </v-card-text>
+                    </v-card>
+                  </v-card-text>
+                </div>
+                <div v-if="!phrViewActive">
+                  <div v-if="selectedLinks.length === 0" key="title"
+                    class="title font-weight-light grey--text pa-4 text-center">
+                    Select the links you want to display
                   </div>
-                
-                  <v-card
-                    v-for="(selection, i) in selectedItems"
+                  <v-card 
+                    v-for="(selectLink, i) in selectedLinks" 
                     :key="i"
+                    :id="`Link-${selectLink.title}/${selectLink.name}`" 
                     class="my-6"
+                    style="background-color: rgba(50, 45, 106, 0.97);"
                   >
-                    <v-card-title
-                      style="border-top: 4px solid #0d47a1;"
+                    <div class="phr-links-title">
+                      <span>{{selectLink.title}}/{{selectLink.name}}</span>
+                    </div>
+
+                    <view-mk 
+                      :key="i" 
+                      :url="selectLink.raw_url" 
+                      class="phr-links"
                     >
-                      {{selection.relative_path}}
-                      <v-btn
-                        icon
-                        color="primary"
-                        :href="selection.url"
-                        class="ml-2"
-                      >
-                        <v-icon>mdi-github</v-icon>
-                      </v-btn>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        icon
-                        color="error"
-                        @click="removeSelectedItem(i)"
-                      >
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-card-title>
-                    <v-card-text>
-                      <view-mk
-                        :key="i"
-                        :url="selection.markdown_url"
-                      >
-                      </view-mk>
-                    </v-card-text>
+                    </view-mk>
                   </v-card>
-                </v-card-text>
+                </div>
+              </v-col>
+              <v-col cols="2" v-if="!phrViewActive">
+
+                <div class="link-navi-sticky">
+                  <div class="link-navi">
+
+                    <v-list style="background-color: transparent;" dark dense>
+                      <v-list-item 
+                        v-for="(item, i) in selectedLinksNavigation" 
+                        :key="i" 
+                        class="pl-0"
+                      >
+                        <v-list-group 
+                          :value="true" 
+                          no-action 
+                          sub-group
+                        >
+                          <template v-slot:activator>
+                            <v-list-item-title style="color: rgba(255, 255, 255, 1);">{{i}}</v-list-item-title>
+                          </template>
+                          <v-list-item-content>
+                            <v-list-item 
+                              v-for="(link, j) in item" 
+                              :key="j" 
+                              link
+                              @click="jumpToSelectedLink(`Link-${i}/${link.name}`)"
+                            >
+                              <v-list-item-subtitle v-text="link.name"></v-list-item-subtitle>
+                            </v-list-item>
+                          </v-list-item-content>
+                      </v-list-item>
+                      </v-list-group>
+                    </v-list>
+                  </div>
+                </div>
               </v-col>
             </v-row>
-        
-            <v-divider></v-divider>
-        
             <v-card-actions>
-              <v-btn
-                text
-                @click="selectedItems = []"
-              >
-                Reset
-              </v-btn>
-        
               <v-spacer></v-spacer>
+              <!---
         
               <v-btn
                 class="white--text"
@@ -139,6 +283,7 @@
                   mdi-content-save
                 </v-icon>
               </v-btn>
+            -->
             </v-card-actions>
           </v-card>
         </v-container>
@@ -152,23 +297,27 @@
   <script>
     Vue.use(VueMarkdown);
     Vue.component('view-mk', {
-      data(){
+      data() {
         return {
           markdown: ''
         }
       },
       props: ['url'],
-      async mounted(){
+      async mounted() {
         this.fetchData()
       },
       methods: {
         async fetchData() {
           const response = await fetch(this.url)
-          this.markdown = await response.text()
-        }
+          if (response.ok) {
+            this.markdown = await response.text()
+          } else {
+            this.markdown = ""
+          }
+        },
       },
       watch: {
-        url: function(){
+        url: function () {
           this.fetchData()
         }
       },
@@ -186,23 +335,97 @@
       vuetify: new Vuetify(),
       data: () => ({
         phases: [JSON_PLACEHOLDER],
+        awesomeLinks: [JSON_LINKS_PLACEHOLDER],
         selectedItems: [],
         preOpenedItems: [],
-        testmk: '## Header'
+        testmk: '## Header',
+        search: null,
+        color: '#1f1547',
+        colorText: '#ffffff',
+        colorBackground: '#000000',
+        phrViewActive: true,
+        selectedLinks: [],
+        showUpButton: false
       }),
-
-      // async created(){
-      //   const response = await fetch('./test2.json')
-      //   this.phases = [await response.json()]
-      //   console.log([await response.json()])
-      // },
-
       methods: {
-        removeSelectedItem(index){
+        removeSelectedItem(index) {
           this.selectedItems.splice(index, 1)
+        },
+        removeSelectedLink(index) {
+          this.selectedLinks.splice(index, 1)
+        },
+        jumpToSelectedItem(id) {
+          document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        },
+        jumpToSelectedLink(id) {
+          document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        },
+        moveToPageTop() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        addTopic(result) {
+          if (result != null) {
+            this.selectedItems.push(result.object)
+          }
+          this.search = []
+        },
+        toggleButtons() {
+          this.phrViewActive = !this.phrViewActive
+        },
+        handleIntersectButtons(entries, observer) {
+          this.showUpButton = !entries[0].isIntersecting
+        },
+        handleResetButton() {
+          if (this.phrViewActive) {
+            this.selectedItems = []
+          } else {
+            this.selectedLinks = []
+          }
+        }
+      },
+      computed: {
+        getTopics() {
+          const findChildren = (arr) => {
+            return arr.map(element => {
+              if (element.children.length === 0) {
+                return { ...element }
+              } else {
+                const { children, ...rest } = element
+                return [{ ...rest }, findChildren(element.children)]
+              }
+            })
+          }
+
+          let topics = findChildren(this.phases)
+          topics = topics.flat(Infinity)
+
+          topics = topics.map((element) => ({
+            text: element.name,
+            value: element.id,
+            object: { ...element }
+          }))
+          return topics
+        },
+        selectedLinksNavigation() {
+          const groups = this.selectedLinks.reduce((groups, item) => {
+            const group = (groups[item.title] || [])
+            group.push(item)
+            groups[item.title] = group
+            return groups
+          }, {})
+          return groups
+        },
+        filterPhrModelLinks() {
+          filtered = this.awesomeLinks.filter((obj => {
+            if (obj.children.length > 0){
+              return obj
+            }
+          }))
+          return filtered
         }
       }
     })
   </script>
 </body>
+
 </html>
