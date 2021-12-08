@@ -1,0 +1,122 @@
+.app-style{
+    background-color: #06004d;
+    background-image: url("../img/jyvsectec01.jpg");
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Sofia Pro', sans-serif;
+}
+
+html{
+    scrollbar-color: #888 #06004d;
+    --scrollbarBG: #888;
+    --thumbBG: #06004d;
+}
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #06004d;
+}
+
+body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #888;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+} 
+
+.link-navi-sticky {
+    position: sticky;
+    top: 0;
+}
+
+.link-navi{
+    overflow-y: auto;
+    height: 70vh;
+}
+
+.link-navi::-webkit-scrollbar {
+    width: 10px;
+}
+
+.link-navi::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.link-navi::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #888;
+}
+
+.link-navi::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.tree-view-small {
+    font-size: small;
+    letter-spacing: -0.1em;
+}
+
+.v-treeview-node__root {
+    min-height: 2.5em;
+}
+
+
+.phr-links{
+    color:rgba(255, 255, 255, 1)
+}
+
+.phr-links p {
+    margin-bottom: 0px;
+}
+
+.phr-links ul {
+    margin-bottom: 25px;
+    line-height: 20px;
+    font-style: italic;
+}
+
+.phr-links li {
+    margin-bottom: 10px;
+    padding-right: 15px;
+}
+
+.phr-links a {
+    font-style: normal;
+    color: #87c9b9 !important;
+}
+
+.phr-links a:hover {
+    color: white !important;
+}
+
+.phr-links p {
+    margin-bottom: 10px;
+}
+
+.phr-links h2 {
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+.phr-links h3 {
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2em;
+}
+
+.phr-links-title {
+    background-color: #56a996;
+    border-top: 5px solid #56a996;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    width: 100%;
+    padding-left: 20px;
+    color: rgba(13, 0, 76, 0.9);
+}
