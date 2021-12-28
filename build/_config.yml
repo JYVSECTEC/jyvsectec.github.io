@@ -1,5 +1,5 @@
 theme: jekyll-theme-cayman
-title: PHR Model
+title: Prepare, Hunt, and Respond
 plugins:
   - jekyll-feed
   - jekyll-sitemap
