@@ -19,7 +19,7 @@ parser.add_argument('-t', '--html-template-file', default='graph_template.html')
 parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master/')
 parser.add_argument('-m', '--md-base', default='https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/')
 parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
-parser.add_argument('-o','--output', type=argparse.FileType('w'), default='-')
+parser.add_argument('-o', '--output', type=argparse.FileType('w'), default='-')
 
 def get_meta(folder_path):
     meta_path = os.path.join(folder_path, META_JSON_NAME)
@@ -95,9 +95,9 @@ def import_folder(relative_path, options):
     
     children = sort_children(children, meta)
 
-    folder_type = 'topic'
-    if not children:
-        folder_type = 'tool'
+    #folder_type = 'topic'
+    #if not children:
+    #    folder_type = 'tool'
 
     attack_object = None
 
@@ -111,7 +111,7 @@ def import_folder(relative_path, options):
         'name': name if identifier != 1 else 'PHR model',
         'folder_name': folder_name,
         'children': children,
-        'type': folder_type,
+        #'type': folder_type,
         'attack_url': attack_object['url'] if attack_object else None,
         'url': make_url(relative_path, options),
         'markdown_url': make_md_url(relative_path, options),
