@@ -7,8 +7,7 @@ Prepare, Hunt, and Respond - Conceptual model against cyber attacks by [JYVSECTE
 ## Overview
 The idea behind the conceptual model is to represent a comprehensive model for organizations to defend against modern cyber attacks. The model "PREPARE, HUNT, AND RESPOND" will be evolving from the initial release to encompass more detailed information and examples of tools and techniques to each section. The goal is to gather the best publicly available information, solutions, and tools to represent how different sections of the model can be done. 
 
-![Prepare, Hunt, and Respond - Conceptual model against cyber attacks](https://github.com/JYVSECTEC/PHR-model/blob/master/_images/Prepare_Hunt_Respond.png "Prepare, Hunt, and Respond - Conceptual model against cyber attacks")
-
+![Prepare, Hunt, and Respond - Conceptual model against cyber attacks](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/Prepare_Hunt_Respond.png "Prepare, Hunt, and Respond - Conceptual model against cyber attacks")
 [Download the PDF version](https://github.com/JYVSECTEC/PHR-model/blob/master/Prepare_Hunt_Respond_Poster.pdf)
 
 JYVSECTEC and our experts have gained a lot experience and knowledge by organizing cyber exercises and trainings for government and private companies past 10 years. This experience has helped us to create a new comprehensive model how organizations should be prepared against cyber attacks and cyber crimes. Our aim is to provide detailed information and examples how each section of the model can be implemented in organizations. The goal of the model is to integrate traditional cyber security with incident response and threat hunting as a one complete model for preventing, hunting, and responding to threats. Important part of the model is to utilize continuous development of the organization’s capabilities to defend the business services or other critical functionalities.
@@ -45,6 +44,6 @@ The improvements are a vital part of the model for organization to improve their
 # Main contributors
 The model has been created as a part of Ministry of Education and Culture of Finland funded [CYBERDI](https://jyvsectec.fi/2018/10/cyberdi/) project. The work has been done by specialists of JYVSECTEC and Finland's Police University College.
 
-![JYVSECTEC](https://github.com/JYVSECTEC/PHR-model/blob/master/_images/JYVSECTEC_by_jamk.png) ![JAMK University of Applied Sciences](https://github.com/JYVSECTEC/PHR-model/blob/master/_images/jamk-logo1.png "JAMK")
+![JYVSECTEC](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/JYVSECTEC_by_jamk.png) ![JAMK University of Applied Sciences](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/jamk-logo1.png "JAMK")
 
-![Police University College](https://github.com/JYVSECTEC/PHR-model/blob/master/_images/polamk-logo1.png "Police University College") ![Ministry of Education and Culture of Finland](https://github.com/JYVSECTEC/PHR-model/blob/master/_images/OKM-logo1.png "Ministry of Education and Culture of Finland")
+![Police University College](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/polamk-logo1.png "Police University College") ![Ministry of Education and Culture of Finland](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/OKM-logo1.png "Ministry of Education and Culture of Finland")
