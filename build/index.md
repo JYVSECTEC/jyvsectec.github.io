@@ -46,4 +46,4 @@ The model has been created as a part of Ministry of Education and Culture of Fin
 
 ![JYVSECTEC](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/JYVSECTEC_by_jamk.png) ![JAMK University of Applied Sciences](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/jamk-logo1.png "JAMK")
 
-![Police University College](https://github.com/JYVSECTEC/PHR-model/raw/master/_images/polamk-logo1.png "Police University College") ![Ministry of Education and Culture of Finland](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/OKM-logo1.png "Ministry of Education and Culture of Finland")
+![Police University College](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/polamk-logo1.png "Police University College") ![Ministry of Education and Culture of Finland](https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/_images/OKM-logo1.png "Ministry of Education and Culture of Finland")
