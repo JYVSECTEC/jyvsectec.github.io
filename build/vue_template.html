@@ -635,6 +635,12 @@
           this.awesomeLinks = sortedPhrLinks.map(newIndex => {
             return this.awesomeLinks[newIndex]
           })
+
+          this.awesomeLinks.map(linkTopic => {
+            linkTopic.children.map(link => {
+              this.selectedLinks.push(link)
+            })
+          })
         }
       })
     </script>
