@@ -36,7 +36,7 @@ jobs:
             -s ../phr-model-links \
             -m https://raw.githubusercontent.com/JYVSECTEC/PHR-model-links/main \
             -l
-        cp ../phr-model/README.md index.md
+        cat ../phr-model/README.md >> index.md
         
     - name: Build the site in the jekyll/builder container
       run: |
