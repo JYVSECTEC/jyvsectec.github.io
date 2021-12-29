@@ -45,10 +45,9 @@ jobs:
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && JEKYLL_ENV=production jekyll build --future"
 
     - name: Push the changes
-      working-directory: docs/
       run: |
         git config user.name "workflow.bot"
         git config user.email "workflow.bot"
-        git add --all -- ':!*.py'
+        git add docs/*
         git commit -m "Publish the site"
         git push
