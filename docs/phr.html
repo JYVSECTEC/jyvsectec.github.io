@@ -606,6 +606,41 @@
             }))
             return filtered
           }
+        },
+        created() {
+          let phrModelOrder = [
+            'Preparation',
+            'Hypotheses',
+            'Data Collection',
+            'Enrichment',
+            'Threat Hunting',
+            'Triage-Respond',
+            'Eradicate-Recover',
+            'Lessons Learned',
+            'Improvements'
+          ]
+
+          let sortedPhrModel = this.phases[0].children.map((topic, index) => {
+            return [phrModelOrder.indexOf(topic.name), index]
+          }).sort((a, b) => a[0] - b[0]).map(item => item[1])
+
+          this.phases[0].children = sortedPhrModel.map(newIndex => {
+            return this.phases[0].children[newIndex]
+          })
+
+          let sortedPhrLinks = this.awesomeLinks.map((topic, index) => {
+            return [phrModelOrder.indexOf(topic.name), index]
+          }).sort((a, b) => a[0] - b[0]).map(item => item[1])
+
+          this.awesomeLinks = sortedPhrLinks.map(newIndex => {
+            return this.awesomeLinks[newIndex]
+          })
+
+          this.awesomeLinks.map(linkTopic => {
+            linkTopic.children.map(link => {
+              this.selectedLinks.push(link)
+            })
+          })
         }
       })
     </script>
