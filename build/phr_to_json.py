@@ -12,15 +12,6 @@ MITRE_ATTACK_BY_TID = {}
 META_FILES = [META_JSON_NAME, '.gitignore', '.gitkeep']
 ID_COUNT = 0
 
-parser = argparse.ArgumentParser()
-parser.add_argument("phr_root")
-parser.add_argument('-f', '--fill-html-template', action='store_true')
-parser.add_argument('-t', '--html-template-file', default='graph_template.html')
-parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master/')
-parser.add_argument('-m', '--md-base', default='https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master/')
-parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
-parser.add_argument('-o', '--output', type=argparse.FileType('w'), default='-')
-
 def get_meta(folder_path):
     meta_path = os.path.join(folder_path, META_JSON_NAME)
     if os.path.exists(meta_path):
@@ -54,11 +45,11 @@ def sort_children(children, meta):
 
 
 def make_url(relative_path, options):
-    return '%s%s' % (options.url_base, relative_path)
+    return f"{options.url_base}/{relative_path}"
 
 def make_md_url(relative_path, options):
-    # return URI for a raw markdown file named as README.md
-    return f"{ options.md_base }{ relative_path }\\README.md"
+    """ return URI for a raw markdown file named as README.md """
+    return f"{ options.md_base }/{ relative_path }/README.md"
 
 def get_id():
     global ID_COUNT
@@ -80,20 +71,24 @@ def import_folder(relative_path, options):
     folder_content_names = [os.path.basename(path) for path in glob.glob(os.path.join(full_path, '*'))]
     folder_content_names = [n for n in folder_content_names if n not in META_FILES]
     if not folder_content_names:
-        # Not even a README.md in this folder -> skip
-        print("Skip empty folder: %s" % relative_path, file=sys.stderr)
+        """ Not even a README.md in this folder -> skip """
+        print(f"Skip empty folder: {relative_path}", file=sys.stderr)
         return None
 
+    print(folder_content_names)
     for sub_content_name in folder_content_names:
         sub_content_path = os.path.join(full_path, sub_content_name)
         if not os.path.isdir(sub_content_path):
+            #print(sub_content_path)
             continue
         sub_folder_relative = os.path.join(relative_path, sub_content_name)
         r = import_folder(sub_folder_relative, options)
+        #print(r)
         if r:
             children.append(r)
     
     children = sort_children(children, meta)
+    print(f"children{children}")
 
     #folder_type = 'topic'
     #if not children:
@@ -137,25 +132,31 @@ def preload_mitre_attack_enterprise():
                 'url': ref.get('url', '')
             }
 
-def run():
-    options = parser.parse_args()
-
-    if options.resolve_mitre_attack_names:
+def main(args):
+    if args.resolve_mitre_attack_names:
         preload_mitre_attack_enterprise()
 
-    result = import_folder('', options)
-    # print(json.dumps(result))
-    if options.fill_html_template:
-        with open(options.html_template_file) as in_f:
-            template = in_f.read()
-            # print(template)
+    result = import_folder('', args)
+
+    if args.fill_html_template:
+        with open(args.html_template_file) as fin:
+            template = fin.read()
             template = template.replace('JSON_PLACEHOLDER', json.dumps(result))
-            print(template, file=options.output)
+            print(template, file=args.output)
             print(template)
     else:
-        print(json.dumps(result, indent=4), file=options.output)
+        print(json.dumps(result, indent=4), file=args.output)
 
 
 
 if __name__ == '__main__':
-    run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("phr_root")
+    parser.add_argument('-f', '--fill-html-template', action='store_true')
+    parser.add_argument('-t', '--html-template-file', default='graph_template.html')
+    parser.add_argument('-u', '--url-base', default='https://github.com/JYVSECTEC/PHR-model/tree/master')
+    parser.add_argument('-m', '--md-base', default='https://raw.githubusercontent.com/JYVSECTEC/PHR-model/master')
+    parser.add_argument('-r', '--resolve-mitre-attack-names', action='store_true')
+    parser.add_argument('-o', '--output', type=argparse.FileType('w'), default='-')
+    args = parser.parse_args()
+    main(args)
