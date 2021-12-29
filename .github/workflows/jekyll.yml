@@ -23,8 +23,8 @@ jobs:
         path: phr-model-links
           
     - name: Copy and prepare the sites
-      working-directory: build/
       run: |
+        cd build/
         wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -qO enterprise-attack.json
         python3 phr_to_json.py ../phr-model/ \
             --fill-html-template \
