@@ -235,7 +235,7 @@
                         key="PHR-model" 
                         v-if="phases.length > 0" 
                         v-model="selectedItems"
-                        :items="phases[0].children" 
+                        :items="phases" 
                         selected-color="#56a996" 
                         open-on-click 
                         selectable 
@@ -515,7 +515,6 @@
           awesomeLinks: [JSON_LINKS_PLACEHOLDER],
           selectedItems: [],
           preOpenedItems: [],
-          testmk: '## Header',
           search: null,
           color: '#1f1547',
           colorText: '#ffffff',
