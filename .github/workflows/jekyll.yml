@@ -6,7 +6,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -23,10 +22,10 @@ jobs:
         repository: JYVSECTEC/phr-model-links
         path: phr-model-links
           
-    - name: Copy and prepare sites
+    - name: Copy and prepare the sites
+      working-directory: build/
       run: |
-        cd build/
-        wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -O enterprise-attack.json
+        wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -qO enterprise-attack.json
         python3 phr_to_json.py ../phr-model/ \
             --fill-html-template \
             --html-template-file vue_template.html \
@@ -41,13 +40,15 @@ jobs:
     - name: Build the site in the jekyll/builder container
       run: |
         docker run \
-        -v $(pwd)/build:/srv/jekyll -v $(pwd)/docs:/srv/jekyll/_site \
+        -v $(pwd)/build:/srv/jekyll \
+        -v $(pwd)/docs:/srv/jekyll/_site \
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && JEKYLL_ENV=production jekyll build --future"
 
-    - name: push changes
+    - name: Push the changes
+      working-directory: docs/
       run: |
-        git config --global user.name "workflow.bot"
-        git config --global user.email "workflow.bot"
-        git add docs/*
-        git commit -m "Publish site"
+        git config user.name "workflow.bot"
+        git config user.email "workflow.bot"
+        git add --all -- ':!*.py'
+        git commit -m "Publish the site"
         git push
