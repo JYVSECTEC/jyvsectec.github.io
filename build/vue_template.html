@@ -56,11 +56,11 @@
             <v-divider></v-divider>
             <v-list-item dark>
               <v-list-item-content>
-                <v-list-item-title class="text-h6 text-wrap">
-                  <a href="/">
-                    Prepare, Hunt, and Respond 
-                  </a>
-                </v-list-item-title>
+                <a href="https://phr.jyvsectec.fi/">
+                  <v-list-item-title class="text-h6 text-wrap">
+                    Prepare, Hunt, and Respond
+                  </v-list-item-title>
+                </a>
                 <v-list-item-subtitle class="text-wrap">
                   Conceptual model against cyber attacks by 
                   <a href="https://www.jyvsectec.fi" class="text-decoration-none">JYVSECTEC</a>
@@ -76,7 +76,7 @@
                 color="white" 
                 tile
               >
-              PHR-model
+              PHR model
               </v-btn>
               <v-btn 
                 id="LINKS" 
@@ -111,7 +111,7 @@
                   key="PHR-model" 
                   v-if="phases.length > 0" 
                   v-model="selectedItems"
-                  :items="phases[0].children" 
+                  :items="phases" 
                   selected-color="#56a996" 
                   open-on-click 
                   selectable 
@@ -123,13 +123,24 @@
                   transition 
                   hoverable
                   v-intersect="handleIntersectButtons"
+                  activatable
+                  @update:active="clickOnNode"
+                  selection-type="independent"
+                  :open.sync="preOpenedItems"
+                  active-class=""
+                  color=""
                 >
                 </v-treeview>
               </v-card-text>
+              <v-btn text dark @click="selectAll" class="pt-2">Select all</v-btn>
             </div>
 
             <div v-if="!phrViewActive">
-              <v-card-text style="padding-left: 0px;">
+              <v-card-text class="mb-0 pb-0" style="color: #ffffff;">
+                <v-icon dark>mdi-chevron-down</v-icon>
+                PHR model links
+              </v-card-text>
+                <v-card-text class="ml-2 pt-1">
                 <v-treeview 
                   key="PHR-links" 
                   v-if="!phrViewActive" 
@@ -146,9 +157,14 @@
                   transition 
                   hoverable
                   v-intersect="handleIntersectButtons"
+                  activatable
+                  @update:active="clickOnNode"
+                  active-class=""
+                  color=""
                 >
                 </v-treeview>
               </v-card-text>
+              <v-btn text dark @click="selectAll" class="pt-2">Select all</v-btn>
             </div>
             
             <v-list-item>
@@ -190,9 +206,11 @@
                     dark 
                     flat 
                   >
-                    <v-toolbar-title class="text-wrap mt-0 pt-0">
-                      Prepare, Hunt, and Respond
-                    </v-toolbar-title>
+                    <a href="https://phr.jyvsectec.fi/">
+                      <v-toolbar-title class="text-wrap mt-0 pt-0">
+                        Prepare, Hunt, and Respond
+                      </v-toolbar-title>
+                    </a>
                   </v-toolbar>
                   <v-card-title style="flex-wrap: nowrap;">
                     <v-btn 
@@ -202,7 +220,7 @@
                       color="white" 
                       tile
                     >
-                    PHR-model
+                    PHR model
                     </v-btn>
                     <v-btn 
                     id="LINKS" 
@@ -238,9 +256,9 @@
                         v-if="phases.length > 0" 
                         v-model="selectedItems"
                         :items="phases" 
-                        selected-color="#56a996" 
-                        open-on-click 
-                        selectable 
+                        selected-color="#56a996"
+                        open-on-click
+                        selectable
                         return-object 
                         dark
                         expand-icon="mdi-chevron-down" 
@@ -249,13 +267,24 @@
                         transition 
                         hoverable
                         v-intersect="handleIntersectButtons"
+                        activatable
+                        @update:active="clickOnNode"
+                        selection-type="independent"
+                        :open.sync="preOpenedItems"
+                        active-class=""
+                        color=""
                       >
                       </v-treeview>
                     </v-card-text>
+                    <v-btn text dark @click="selectAll" class="pt-2">Select all</v-btn>
                   </div>
 
                   <div v-if="!phrViewActive">
-                    <v-card-text>
+                    <v-card-text class="mb-0 pb-0" style="color: #ffffff;">
+                      <v-icon dark>mdi-chevron-down</v-icon>
+                      PHR model links
+                    </v-card-text>
+                    <v-card-text class="ml-2 pt-1">
                       <v-treeview 
                         key="PHR-links" 
                         v-if="!phrViewActive" 
@@ -272,9 +301,14 @@
                         transition 
                         hoverable
                         v-intersect="handleIntersectButtons"
+                        activatable
+                        @update:active="clickOnNode"
+                        active-class=""
+                        color=""
                       >
                       </v-treeview>
                     </v-card-text>
+                    <v-btn text dark @click="selectAll" class="pt-2">Select all</v-btn>
                   </div>
 
                   <div 
@@ -322,7 +356,11 @@
                     Select the content you want to display
                   </div>
 
-                  <div v-if="selectedItems.length > 0" v-intersect="toggleMobileUpButton">
+                  <div 
+                    v-if="selectedItems.length > 0" 
+                    v-intersect="toggleMobileUpButton" 
+                    :style="showAllChips ? {} : [{'max-height': '95px'},{'overflow': 'hidden'}]"
+                    >
                     <v-scroll-x-transition group hide-on-leave>
                       <v-chip 
                         v-for="(selection, i) in selectedItems" 
@@ -335,7 +373,7 @@
                       >
                         <v-btn 
                           icon 
-                          color="white" 
+                          color="#da0b6e" 
                           x-small 
                           class="mr-2" 
                           @click.stop="removeSelectedItem(i)"
@@ -345,6 +383,11 @@
                         {{ selection.name }}
                       </v-chip>
                     </v-scroll-x-transition>
+                  </div>
+                  <div v-if="selectedItems.length > 20" style="width: 100%; text-align: center;">
+                    <v-btn small text dark class="mt-2" @click="toggleShowAllChips">
+                      {{showAllChips ? "Hide" : "Show all"}}
+                    </v-btn>
                   </div>
 
                   <v-card 
@@ -516,7 +559,8 @@
           phases: [JSON_PLACEHOLDER],
           awesomeLinks: [JSON_LINKS_PLACEHOLDER],
           selectedItems: [],
-          preOpenedItems: [],
+          preOpenedItems: [{"id": 1}],
+          testmk: '## Header',
           search: null,
           color: '#1f1547',
           colorText: '#ffffff',
@@ -525,7 +569,8 @@
           selectedLinks: [],
           showUpButton: false,
           showUpButtonMobile: false,
-          drawer: true
+          drawer: true,
+          showAllChips: false
         }),
         methods: {
           removeSelectedItem(index) {
@@ -566,6 +611,45 @@
               this.selectedLinks = []
             }
             this.showUpButtonMobile = false
+          },
+          clickOnNode(node) {
+            if (node.length > 0) {
+              if (this.phrViewActive) {
+                this.selectedItems.push(node[0])
+              } else {
+                this.selectedLinks.push(node[0])
+              }
+            }
+          },
+          selectAll() {
+            const findChildren = (node) => {
+              return node.children.map(element => {
+                if (element.children.length === 0) {
+                  return { ...element }
+                } else {
+                  const { children, ...rest } = element
+                  return [{ ...rest }, findChildren(element)]
+                }
+              })
+            }
+
+            if (this.phrViewActive) {
+              let all = findChildren(this.phases[0])
+              all = all.flat(Infinity)
+              this.selectedItems.push(this.phases[0])
+              all.map(item => {
+                this.selectedItems.push(item)
+              })
+            } else {
+              this.awesomeLinks.map(linkTopic => {
+                linkTopic.children.map(link => {
+                this.selectedLinks.push(link)
+                })
+              })
+            }
+          },
+          toggleShowAllChips() {
+            this.showAllChips = !this.showAllChips
           }
         },
         computed: {
@@ -643,6 +727,9 @@
               this.selectedLinks.push(link)
             })
           })
+
+          this.selectedItems.push(this.phases[0])
+
         }
       })
     </script>
