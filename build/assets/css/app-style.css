@@ -68,7 +68,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 
 .phr-links{
-    color:rgba(255, 255, 255, 1)
+    color:rgba(255, 255, 255, 1);
 }
 
 .phr-links p {
@@ -119,4 +119,19 @@ body::-webkit-scrollbar-thumb:hover {
     width: 100%;
     padding-left: 20px;
     color: rgba(13, 0, 76, 0.9);
+}
+
+.phr-links img {
+    max-width: 100%;
+}
+
+.table td , th {
+    border: 1px dotted black;
+    border-collapse: collapse;
+}
+
+pre code {
+    display: block;
+    overflow-x: auto;
+    overflow-inline: auto;
 }
